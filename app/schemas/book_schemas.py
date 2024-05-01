@@ -1,8 +1,6 @@
-from typing import List, Optional, Generic, TypeVar
-from pydantic import BaseModel, Field
-from pydantic.generics import GenericModel
+from typing import Optional
+from pydantic import BaseModel
 
-T = TypeVar("T")
 
 class BookSchema(BaseModel):
     id: Optional[int] = None
@@ -18,9 +16,3 @@ class BookSchema(BaseModel):
                 "description": "Book description"
             }
         }
-
-class Response(BaseModel):
-    code: str
-    status: str
-    message: str
-    result: Optional[T]

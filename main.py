@@ -1,16 +1,18 @@
 from fastapi import FastAPI
 import uvicorn
+import app.core.config as model
 
-import app.models as model
-from app.Config import engine
-from app.routes import router as router_crud
+from app.core.config import engine
 
+from app.routes.user_routes import router as user_routes
+from app.routes.auth_routes import router as auth_routes
+from app.routes.book_routes import router as book_routes
 
 model.Base.metadata.create_all(bind=engine)
 
 app = FastAPI(
-    title="Tienda de libros",
-    description="Ejemplo CUL",
+    title="Mi App",
+    description="Ejemplo CUL - Desarrollo Web II",
     version="1.0.0"
 )
 
@@ -18,11 +20,13 @@ app = FastAPI(
 @app.get("/")
 def index():
     return {
-        "message": "Hello"
+        "message": "Hola Mundo..."
     }
 
 
-app.include_router(router=router_crud, tags=["CRUD"], prefix="/books")
+app.include_router(router=user_routes, tags=['Users'], prefix='/users')
+app.include_router(router=auth_routes, tags=["Auth"], prefix="/auth")
+app.include_router(router=book_routes, tags=["Books"], prefix="/books")
 
 if __name__ == "__main__":
     uvicorn.run("main:app",
