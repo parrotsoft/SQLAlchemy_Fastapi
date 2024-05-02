@@ -1,27 +1,32 @@
-from fastapi import APIRouter
-from pydantic import BaseModel
-from jose import jwt
+from fastapi import APIRouter, Depends
+from sqlalchemy.orm import Session
 
-SECRET_KEY = '5m)-3#w%p(@=h-esz()fnrmfzh$#yp2irsdef0322^+t70t+=9'
-ALGORITHM = 'HS256'
+from app.core.auth_token import create_token
+from app.core.config import get_db
+from app.schemas.api_response import Response
+from app.schemas.user_schemas import UserSchema
+from app.services.auth_validation import authenticate
 
 router = APIRouter()
 
 
-class LoginCredential(BaseModel):
-    email: str | None = None
-    password: str | None = None
-
-
 @router.post("/login")
-async def login(request: LoginCredential):
-    token = jwt.encode(
-        {
-            'email': request.email,
-            'password': request.password
-        },
-        SECRET_KEY,
-        algorithm=ALGORITHM
-    )
+async def login(request: UserSchema, db: Session = Depends(get_db)):
 
-    return token
+    _authentication = authenticate(db=db, user=request)
+
+    if _authentication is not None:
+        token = create_token(_authentication.email)
+
+        return Response(
+            code='Ok',
+            status='200',
+            message='Login Successful',
+            result={'access_token': token, 'token_type': 'bearer'}
+        )
+
+    return Response(
+        code='Error',
+        statu='401',
+        message="Incorrect credentials"
+    )
