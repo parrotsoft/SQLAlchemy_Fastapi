@@ -2,11 +2,15 @@ from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from jose import jwt
 from fastapi import Request, HTTPException
 
-from app.core.config import get_db, SessionLocal
+from app.core.config import SessionLocal
 from app.models.user_model import UserModel
 
-SECRET_KEY = '5m)-3#w%p(@=h-esz()fnrmfzh$#yp2irsdef0322^+t70t+=9'
-ALGORITHM = 'HS256'
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+SECRET_KEY = os.getenv('SECRET_KEY')
+ALGORITHM = os.getenv('ALGORITHM')
 
 
 def create_token(email):
