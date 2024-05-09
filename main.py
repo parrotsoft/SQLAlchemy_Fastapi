@@ -8,6 +8,10 @@ from app.routes.user_routes import router as user_routes
 from app.routes.auth_routes import router as auth_routes
 from app.routes.book_routes import router as book_routes
 
+
+from fastapi.middleware.cors import CORSMiddleware
+
+
 model.Base.metadata.create_all(bind=engine)
 
 app = FastAPI(
@@ -16,6 +20,13 @@ app = FastAPI(
     version="1.0.0"
 )
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 @app.get("/")
 def index():
