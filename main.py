@@ -16,7 +16,7 @@ model.Base.metadata.create_all(bind=engine)
 
 app = FastAPI(
     title="Mi App",
-    description="Ejemplo CUL - Desarrollo Web II",
+    description="Ejemplo CUL - Desarrollo Web II - 2024",
     version="1.0.0"
 )
 
@@ -31,7 +31,7 @@ app.add_middleware(
 @app.get("/")
 def index():
     return {
-        "message": "Hola Mundo Miguel..."
+        "message": "Hola Mundo Miguel Lopez..."
     }
 
 
